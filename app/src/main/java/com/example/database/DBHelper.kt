@@ -8,6 +8,20 @@ import android.database.sqlite.SQLiteOpenHelper
 
 class DBHelper(context: Context?) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+
+    companion object {
+        // версия БД
+        const val DATABASE_VERSION = 1
+        // название БД
+        const val DATABASE_NAME = "tododb"
+        // название таблицы
+        const val TABLE_NAME = "tasks"
+        // названия полей
+        const val KEY_ID = "id"
+        const val KEY_TITLE = "title"
+        const val KEY_IS_DONE = "is_done"
+    }
+
     override fun onCreate(db: SQLiteDatabase) {
 
         db.execSQL("""
@@ -74,18 +88,6 @@ class DBHelper(context: Context?) :
         close()
     }
 
-    companion object {
-        // версия БД
-        const val DATABASE_VERSION = 1
-        // название БД
-        const val DATABASE_NAME = "tododb"
-        // название таблицы
-        const val TABLE_NAME = "tasks"
-        // названия полей
-        const val KEY_ID = "id"
-        const val KEY_TITLE = "title"
-        const val KEY_IS_DONE = "is_done"
-    }
 
 
 }

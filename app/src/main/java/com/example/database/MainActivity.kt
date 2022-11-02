@@ -1,17 +1,23 @@
 package com.example.database
 
 
+//import TodoDao
+//import TodoDatabase
+//import TodoEntity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 
 class MainActivity : AppCompatActivity() {
-    private val dbHelper = DBHelper(this)
 
-    private var list = mutableListOf<Task>()
+    lateinit var db: TodoDatabase
+    lateinit var todoDao: TodoDao
+
+    private var list = mutableListOf<TodoEntity>()
     private lateinit var adapter: RecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,29 +28,47 @@ class MainActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         val editText = findViewById<EditText>(R.id.textInput)
 
+
+        db = Room.databaseBuilder(
+            applicationContext,
+            TodoDatabase::class.java, "tododb"
+        )// выполняемся в основном потоке
+            .allowMainThreadQueries()
+            .build()
+        todoDao = db.todoDao()
+
+
+
+        val list_ = todoDao.all//dbHelper.getTodos()
+
+        list.addAll(list_)
+
         adapter = RecyclerAdapter(list) {
             // адаптеру передали обработчик удаления элемента
-            dbHelper.removeTask(list[it].id)
+            //dbHelper.removeTask(list[it].id)
+            todoDao.delete(list[it])
             list.removeAt(it)
             adapter.notifyItemRemoved(it)
 
         }
 
-        val list_ = dbHelper.getTodos()
-        list.addAll(list_)
-
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
-
-        //val buttonAdd = findViewById<Button>(R.id.button)
 
 
         buttonAdd.setOnClickListener {
 
-            list.add(Task(dbHelper.addTask(editText.text.toString()), editText.text.toString(), false))
+            //list.add(Task(dbHelper.addTask(editText.text.toString()), editText.text.toString(), false))
+            val todoEntity = TodoEntity()
+            todoEntity.title = editText.text.toString()
+            todoEntity.isDone = false
+            todoDao.insert(todoEntity)
+            list.add(todoEntity)
             adapter.notifyItemInserted(list.lastIndex)
             editText.text.clear()
 
         }
+
+
     }
 }
