@@ -4,6 +4,7 @@ package com.example.database
 //import TodoDao
 //import TodoDatabase
 //import TodoEntity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -19,6 +20,10 @@ class MainActivity : AppCompatActivity() {
 
     private var list = mutableListOf<TodoEntity>()
     private lateinit var adapter: RecyclerAdapter
+
+    companion object {
+        const val ID_CONTACT_KEY = "ID_CONTACT_KEY"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,9 +51,14 @@ class MainActivity : AppCompatActivity() {
         adapter = RecyclerAdapter(list) {
             // адаптеру передали обработчик удаления элемента
             //dbHelper.removeTask(list[it].id)
-            todoDao.delete(list[it])
-            list.removeAt(it)
-            adapter.notifyItemRemoved(it)
+            //todoDao.delete(list[it])
+            //list.removeAt(it)
+            //adapter.notifyItemRemoved(it)
+
+            val intent = Intent(this, Info::class.java)
+            intent.putExtra(ID_CONTACT_KEY, list[it].id)
+            startActivity(intent)
+
 
         }
 
