@@ -72,14 +72,11 @@ class MainActivity : AppCompatActivity() {
             //list.add(Task(dbHelper.addTask(editText.text.toString()), editText.text.toString(), false))
             val todoEntity = TodoEntity()
             todoEntity.title = editText.text.toString()
-            todoEntity.isDone = false
-            todoEntity.phoneNumber = ""
-            todoEntity.surname = ""
-            todoEntity.birthDate = ""
 
             todoEntity.id = todoDao.insert(todoEntity)
 
             list.add(todoEntity)
+
             adapter.notifyItemInserted(list.lastIndex)
             editText.text.clear()
 
@@ -94,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                 //list.removeIf { it.title.toString().contains(text.toString()) }
                 list.clear()
                 list.addAll(list_)
-                list.removeIf { !it.title.toString().contains(text.toString(), ignoreCase = true) }
+                list.removeIf { !(it.title.toString().contains(text.toString(), ignoreCase = true) or it.surname.toString().contains(text.toString(), ignoreCase = true))}
                 adapter.notifyDataSetChanged()
             }
         }
