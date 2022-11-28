@@ -88,10 +88,11 @@ class MainActivity : AppCompatActivity() {
 
         editText.doOnTextChanged { text, start, before, count ->
             run {
-                //list.removeIf { it.title.toString().contains(text.toString()) }
+
+
                 list.clear()
-                list.addAll(list_)
-                list.removeIf { !(it.title.toString().contains(text.toString(), ignoreCase = true) or it.surname.toString().contains(text.toString(), ignoreCase = true))}
+                list.addAll(list_.filter { !(it.title.contains(text.toString(), ignoreCase = true) or it.surname.contains(text.toString(), ignoreCase = true)) })
+
                 adapter.notifyDataSetChanged()
             }
         }
